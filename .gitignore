@@ -1,0 +1,21 @@
+# BLACK PARIS — .gitignore
+.env
+.env.*
+node_modules/
+dist/
+build/
+.cache/
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+coverage/
+.replit.history
+.upm/
+secrets/
+credentials/
+*.key
+*.pem
+*.p12
+*.pfx
