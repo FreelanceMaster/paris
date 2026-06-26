@@ -10,7 +10,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- ═══ SECURITY HEADERS ═══ -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://giga-lean-cygwin--jamelbessai.replit.app https://api.open-meteo.com; img-src 'self' data: https://media.api-sports.io; frame-ancestors 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://giga-lean-cygwin--jamelbessai.replit.app https://api.open-meteo.com; img-src 'self' data: https://media.api-sports.io https://flagcdn.com https://cdn.jsdelivr.net; frame-ancestors 'none';">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=(), payment=()">
@@ -27,7 +27,7 @@
 <link rel="manifest" href='data:application/manifest+json,{"name":"BLACK PARIS","short_name":"BLACK PARIS","display":"standalone","background_color":"%23000000","theme_color":"%23000000","start_url":"./"}'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/twemoji@14/dist/twemoji.min.js" crossorigin="anonymous"></script>
 <style>
   :root{
@@ -492,6 +492,279 @@
   .mktnote{font-size:12px;color:var(--txt-dim);margin:8px 0 2px}
   .mktadvice{font-size:12px;color:var(--gold-soft);background:rgba(0,230,118,.07);border-radius:8px;padding:7px 9px;margin-top:6px}
   .mktload{font-size:12px;color:var(--txt-faint);padding:6px 0}
+
+
+  /* ═══════════════════════════════════════════
+     APPLE LIQUID GLASS — BLACK PARIS v3.1
+     ═══════════════════════════════════════════ */
+
+  /* ── Base Glass Mixin ── */
+  .tab, .chip, .snav, .rbtn, .ab, .mini, .cbtn,
+  .sharebtn, .aide-cat, .ipquick button, .mtgl,
+  .gatebox, .match, .card, .combobox, .bet,
+  .hot-card, .montante-card, .hist-ticket,
+  .formbox, .scorecard, .cmp, .bestbox, .reccard,
+  .leg, .aide-panel, .scbox, .bankroll {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── Boutons navigation (tabs, chips, snavs) ── */
+  .tab:not(.on), .chip:not(.on), .snav:not(.on),
+  .rbtn, .ipquick button, .mtgl:not(.on),
+  .ab:not(.on), .cbtn:not(.on), .mini, .sharebtn, .aide-cat:not(.on) {
+    background: rgba(255,255,255,0.07) !important;
+    backdrop-filter: blur(20px) saturate(180%) brightness(1.1) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.1) !important;
+    border: 1px solid rgba(255,255,255,0.13) !important;
+    box-shadow:
+      0 2px 8px rgba(0,0,0,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.18),
+      inset 0 -1px 0 rgba(0,0,0,0.15) !important;
+    transition: all 0.22s cubic-bezier(.4,0,.2,1) !important;
+  }
+  .tab:not(.on):hover, .chip:not(.on):hover, .snav:not(.on):hover,
+  .rbtn:hover, .ipquick button:hover, .mtgl:not(.on):hover,
+  .ab:not(.on):hover, .cbtn:not(.on):hover, .mini:hover {
+    background: rgba(255,255,255,0.13) !important;
+    border-color: rgba(201,168,76,0.35) !important;
+    box-shadow:
+      0 4px 16px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.25),
+      inset 0 -1px 0 rgba(0,0,0,0.1) !important;
+    transform: translateY(-1px) !important;
+  }
+  .tab:not(.on):active, .chip:not(.on):active, .rbtn:active {
+    transform: scale(0.97) !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3) !important;
+  }
+
+  /* ── Light theme glass ── */
+  :root[data-theme="light"] .tab:not(.on),
+  :root[data-theme="light"] .chip:not(.on),
+  :root[data-theme="light"] .snav:not(.on),
+  :root[data-theme="light"] .rbtn {
+    background: rgba(255,255,255,0.65) !important;
+    border: 1px solid rgba(0,0,0,0.09) !important;
+    box-shadow:
+      0 2px 8px rgba(0,0,0,0.08),
+      inset 0 1px 0 rgba(255,255,255,0.9),
+      inset 0 -1px 0 rgba(0,0,0,0.05) !important;
+  }
+
+  /* ── Cards glass ── */
+  .match, .card, .bet, .hot-card, .montante-card,
+  .hist-ticket, .scorecard, .cmp, .leg, .combobox {
+    background: rgba(255,255,255,0.04) !important;
+    backdrop-filter: blur(24px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    box-shadow:
+      0 4px 20px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.1) !important;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease !important;
+  }
+  .match:hover, .card:hover, .hot-card:hover, .bet:hover {
+    border-color: rgba(201,168,76,0.3) !important;
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.35),
+      0 0 0 1px rgba(201,168,76,0.15),
+      inset 0 1px 0 rgba(255,255,255,0.14) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* ── Light theme cards ── */
+  :root[data-theme="light"] .match,
+  :root[data-theme="light"] .card,
+  :root[data-theme="light"] .bet,
+  :root[data-theme="light"] .hot-card {
+    background: rgba(255,255,255,0.75) !important;
+    border-color: rgba(0,0,0,0.07) !important;
+    box-shadow:
+      0 4px 20px rgba(0,0,0,0.07),
+      inset 0 1px 0 rgba(255,255,255,1) !important;
+  }
+
+  /* ── Reccard / bestbox glass ── */
+  .reccard, .bestbox {
+    background: rgba(201,168,76,0.06) !important;
+    backdrop-filter: blur(20px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+    border: 1px solid rgba(201,168,76,0.2) !important;
+    box-shadow:
+      0 4px 24px rgba(0,0,0,0.25),
+      inset 0 1px 0 rgba(201,168,76,0.15) !important;
+  }
+
+  /* ── Bankroll glass ── */
+  .bankroll {
+    background: rgba(255,255,255,0.03) !important;
+    backdrop-filter: blur(30px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+    border: 1px solid rgba(201,168,76,0.2) !important;
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,255,255,0.08) !important;
+  }
+  .bk {
+    background: transparent !important;
+    position: relative;
+  }
+  .bk::after {
+    content: '';
+    position: absolute;
+    top: 6px; bottom: 6px; right: 0;
+    width: 1px;
+    background: rgba(255,255,255,0.07);
+  }
+  .bk:last-child::after { display: none; }
+
+  /* ── Gate box glass ── */
+  .gatebox {
+    background: rgba(20,20,24,0.75) !important;
+    backdrop-filter: blur(40px) saturate(200%) brightness(0.95) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(0.95) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    box-shadow:
+      0 32px 80px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.15),
+      inset 0 -1px 0 rgba(0,0,0,0.2) !important;
+  }
+
+  /* ── Aide panel glass ── */
+  .aide-panel {
+    background: rgba(12,12,18,0.85) !important;
+    backdrop-filter: blur(30px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+  }
+
+  /* ── Reflet lumineux sur les boutons actifs ── */
+  .tab.on::before, .snav.on::before, .btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 100%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  /* ── Fab aide glass ── */
+  .fab-aide {
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    box-shadow:
+      0 4px 18px rgba(201,168,76,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.3) !important;
+  }
+
+  /* ── Inputs glass ── */
+  input:not([type=checkbox]):not([type=radio]),
+  select, textarea, .msearch {
+    background: rgba(255,255,255,0.06) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    transition: border-color 0.15s, box-shadow 0.15s !important;
+  }
+  input:focus, select:focus, textarea:focus, .msearch:focus {
+    border-color: rgba(201,168,76,0.6) !important;
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.12), inset 0 1px 0 rgba(255,255,255,0.08) !important;
+    outline: none !important;
+  }
+  :root[data-theme="light"] input:not([type=checkbox]),
+  :root[data-theme="light"] select,
+  :root[data-theme="light"] .msearch {
+    background: rgba(255,255,255,0.8) !important;
+    border-color: rgba(0,0,0,0.1) !important;
+  }
+
+  /* ── Modale Sacoche glass (override) ── */
+  #bp-sac-box {
+    background: rgba(10,10,14,0.88) !important;
+    backdrop-filter: blur(40px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+    border: 1px solid rgba(201,168,76,0.35) !important;
+    box-shadow:
+      0 40px 80px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(201,168,76,0.2),
+      inset 0 -1px 0 rgba(0,0,0,0.3) !important;
+  }
+  #bp-sac-val {
+    background: rgba(255,255,255,0.05) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+
+  /* ── Scroll indicator subtil ── */
+  .filters { mask-image: linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent); }
+
+  /* ═══ BLACK PARIS LUXURY v3 ═══ */
+  :root {
+    --gold: #C9A84C !important;
+    --gold-soft: #E8C96A !important;
+    --gold-dim: #8B6D2A !important;
+    --green: #00FF88 !important;
+    --green-dim: #00CC70 !important;
+  }
+  :root[data-theme="light"] {
+    --gold: #B8922A !important;
+    --gold-soft: #C9A84C !important;
+    --gold-dim: #7A5E1A !important;
+  }
+  .logo { font-family: 'Playfair Display', 'Space Grotesk', sans-serif !important; }
+  .bk .val { font-family: 'Playfair Display', var(--mono) !important; font-size: 17px !important; }
+  .confbar i, .conffill { background: linear-gradient(90deg,#00CC70,#00FF88) !important; box-shadow: 0 0 6px rgba(0,255,136,.3) !important; }
+  .tab.on { background: linear-gradient(135deg,#C9A84C,#E8C96A) !important; color:#0A0A0A !important; border-color: #C9A84C !important; box-shadow: 0 3px 12px rgba(201,168,76,.35) !important; }
+  .snav.on { background: linear-gradient(135deg,#C9A84C,#E8C96A) !important; color:#0A0A0A !important; border-color: #C9A84C !important; }
+  .btn { background: linear-gradient(135deg,#C9A84C,#E8C96A) !important; color:#0A0A0A !important; box-shadow: 0 4px 14px rgba(201,168,76,.3) !important; border-radius: 12px !important; }
+  .btn:hover { background: linear-gradient(135deg,#E8C96A,#F5D97A) !important; transform: translateY(-1px) !important; }
+  .btn.ghost { background: transparent !important; color: var(--txt) !important; border: 1px solid var(--line) !important; box-shadow: none !important; }
+  .btn.ghost:hover { border-color: var(--gold) !important; color: var(--txt) !important; transform: none !important; }
+  .dot { background: #C9A84C !important; box-shadow: 0 0 14px #C9A84C !important; }
+  .bypipo { color: #0A0A0A !important; box-shadow: 0 0 16px rgba(201,168,76,.4) !important; }
+  .bestbox { border-color: rgba(201,168,76,.4) !important; background: linear-gradient(135deg,rgba(201,168,76,.09),rgba(201,168,76,.02)) !important; }
+  .bestlab, .bestmain b { color: #C9A84C !important; }
+  .pickrank { background: #C9A84C !important; color: #0A0A0A !important; }
+  .chip.on { border-color: #C9A84C !important; color: #C9A84C !important; }
+  .intro-logo .ac { color: #C9A84C !important; text-shadow: 0 0 30px rgba(201,168,76,.7) !important; }
+  .intro-dot { background: #C9A84C !important; box-shadow: 0 0 24px #C9A84C !important; }
+  .fab-aide { background: #C9A84C !important; color: #0A0A0A !important; box-shadow: 0 4px 18px rgba(201,168,76,.45) !important; }
+  .fab-aide:hover { background: #E8C96A !important; }
+  .analysis { border-left-color: #C9A84C !important; }
+  .bankroll { border: 1px solid rgba(201,168,76,.25) !important; box-shadow: 0 4px 20px rgba(0,0,0,.15) !important; }
+  .bk:hover { opacity: .8; }
+  header { background: linear-gradient(180deg,#0A0A0A,#111) !important; border-bottom: 2px solid #C9A84C !important; }
+  :root[data-theme="light"] header { background: linear-gradient(180deg,#fff,#f5f5f7) !important; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-thumb { background: rgba(201,168,76,.3); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #C9A84C; }
+  @keyframes bp-fadeup { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+  .match { animation: bp-fadeup .3s ease both; }
+
+  /* Modale Sacoche */
+  #bp-sac-ov {
+    position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.72);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  }
+  #bp-sac-box {
+    background:#0A0A0A;border:1px solid rgba(201,168,76,.4);border-radius:20px;
+    padding:30px 32px;width:100%;max-width:310px;text-align:center;
+    box-shadow:0 40px 80px rgba(0,0,0,.55);
+    animation:bp-fadeup .25s ease;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  #bp-sac-box h3 { font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:#C9A84C;letter-spacing:3px;margin:0 0 5px; }
+  #bp-sac-box p { font-size:11px;color:rgba(255,255,255,.35);margin:0 0 18px; }
+  #bp-sac-val { width:100%;background:#1A1A1A;border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:14px;color:#C9A84C;font-size:28px;font-weight:700;font-family:'Playfair Display',serif;outline:none;text-align:center;margin-bottom:16px;transition:border-color .15s; }
+  #bp-sac-val:focus { border-color:#C9A84C;box-shadow:0 0 0 3px rgba(201,168,76,.15); }
+  #bp-sac-row { display:flex;gap:10px; }
+  #bp-sac-no { flex:1;background:transparent;border:1px solid #2A2A2A;border-radius:10px;padding:12px;color:rgba(255,255,255,.4);cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:13px;transition:all .15s; }
+  #bp-sac-no:hover { border-color:#444; }
+  #bp-sac-ok { flex:2;background:linear-gradient(135deg,#C9A84C,#E8C96A);border:none;border-radius:10px;padding:12px;color:#0A0A0A;cursor:pointer;font-weight:700;font-family:'Space Grotesk',sans-serif;font-size:14px;box-shadow:0 4px 14px rgba(201,168,76,.4);transition:all .15s; }
+  #bp-sac-ok:hover { transform:translateY(-1px);box-shadow:0 6px 18px rgba(201,168,76,.5); }
 </style>
 </head>
 <body>
@@ -518,7 +791,7 @@
 
 <div class="wrap">
   <div class="bankroll">
-    <div class="bk"><div class="lab">Solde</div><div class="val gold" id="bk-cap">—</div></div>
+    <div class="bk" onclick="openSacoche()" style="cursor:pointer" title="Modifier ma sacoche"><div class="lab">Sacoche ✏️</div><div class="val gold" id="bk-cap">—</div></div>
     <div class="bk"><div class="lab">Gain / Perte</div><div class="val" id="bk-pl">—</div></div>
     <div class="bk"><div class="lab">ROI</div><div class="val" id="bk-roi">—</div></div>
     <div class="bk"><div class="lab">Réussite</div><div class="val" id="bk-wr">—</div></div>
@@ -604,7 +877,7 @@
     <!-- ── ANALYSER (Simple + Combiné fusionnés) ── -->
     <div class="sub-panel on" id="analyser">
       <div class="card">
-        <h2>🎯 Analyser un pronostic</h2>
+        <h2>🎯 Analyser une prédiction</h2>
         <p class="hint">Choisis ton match et ton pronostic. L'outil calcule la probabilité instantanément.</p>
         <div class="mode-toggle">
           <button class="mtgl on" id="mtgl-simple" onclick="setMode('simple')">Prédiction simple</button>
@@ -617,7 +890,7 @@
           </select>
         </div>
         <div class="field">
-          <label>Pronostic</label>
+          <label>Prédiction</label>
           <select id="ana-prono" onchange="anaShowChance()">
             <option value="">— Choisis d'abord un match —</option>
           </select>
@@ -628,7 +901,7 @@
             <label>Cote proposée <span style="color:var(--txt-faint)">(optionnel)</span></label>
             <input id="ana-cote" type="text" inputmode="decimal" placeholder="ex. 2,10">
           </div>
-          <button class="btn" onclick="anaVerify()">Analyser ce pronostic</button>
+          <button class="btn" onclick="anaVerify()">Analyser cette prédiction</button>
           <div class="vres" id="ana-res">
             <div class="verdict" id="ana-verdict"></div>
             <div class="vgrid">
@@ -654,7 +927,7 @@
     <!-- ── SUIVI ── -->
     <div class="sub-panel" id="suivi">
       <div class="card">
-        <h2>📋 Suivi de mes pronostics</h2>
+        <h2>📋 Suivi de mes prédictions</h2>
         <p class="hint">Retrouve ici tous tes pronostics enregistrés et leur résultat.</p>
         <div id="scoreperso"></div>
         <div class="betlist" id="betlist"></div>
@@ -2049,7 +2322,42 @@ loadFeed();
 if(typeof twemoji!=='undefined')twemoji.parse(document.body,{folder:'svg',ext:'.svg'});
 TIMER=setInterval(function(){
   if(document.getElementById('matchs').classList.contains('on'))loadFeed();
-},90000);
+},10000);
+
+/* ─── Sacoche Modal ─── */
+function openSacoche(){
+  var cur = store.start || 0;
+  var ov = document.createElement('div');
+  ov.id = 'bp-sac-ov';
+  ov.innerHTML =
+    '<div id="bp-sac-box">' +
+      '<h3>MA SACOCHE</h3>' +
+      '<p>Solde de départ actuel : ' + cur.toFixed(2) + ' €</p>' +
+      '<input id="bp-sac-val" type="number" step="0.01" min="0" value="' + cur + '">' +
+      '<div id="bp-sac-row">' +
+        '<button id="bp-sac-no">Annuler</button>' +
+        '<button id="bp-sac-ok">✓ CONFIRMER</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(ov);
+  var inp = document.getElementById('bp-sac-val');
+  inp.focus(); inp.select();
+  function confirm_save() {
+    var v = parseFloat(inp.value);
+    if (!isNaN(v) && v >= 0) {
+      store.start = v;
+      document.getElementById('startbk').value = v;
+      save();
+      render();
+    }
+    ov.remove();
+  }
+  document.getElementById('bp-sac-ok').onclick = confirm_save;
+  document.getElementById('bp-sac-no').onclick = function(){ ov.remove(); };
+  inp.onkeydown = function(e){ if(e.key==='Enter') confirm_save(); if(e.key==='Escape') ov.remove(); };
+  ov.onclick = function(e){ if(e.target===ov) ov.remove(); };
+}
+
 </script>
 </body>
 </html>
