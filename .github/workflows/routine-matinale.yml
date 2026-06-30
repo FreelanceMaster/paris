@@ -1,0 +1,25 @@
+name: Routine Matinale BLACK PARIS
+on:
+  schedule:
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+jobs:
+  routine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pillow cairosvg requests
+      - name: Routine BLACK PARIS
+        env:
+          AGENT_URL: ${{ secrets.AGENT_URL }}
+          TELEGRAM_BOT: ${{ secrets.TELEGRAM_BOT }}
+          TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT }}
+        run: python routine.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: flyers-${{ github.run_number }}
+          path: /tmp/blackparis/*.png
+          retention-days: 7
