@@ -53,7 +53,7 @@
   :root[data-theme="light"] .s-soon{background:rgba(184,146,42,.14);color:var(--gold)}
   :root[data-theme="light"] .s-done{background:rgba(184,146,42,.12);color:var(--gold)}
   :root[data-theme="light"] .tab.on{background:var(--gold);color:#fff}
-  :root[data-theme="light"] .btn{color:#ffftouch-action:manipulation;}
+  :root[data-theme="light"] .btn{color:#1a1200;touch-action:manipulation}
   :root[data-theme="light"] .pb .p{color:var(--gold-soft)}
   :root[data-theme="light"] .recmain b{color:var(--gold-soft)}
   :root[data-theme="light"] .snav.on{background:var(--gold);color:#fff}
@@ -111,7 +111,7 @@
   .val.pos{color:var(--green)}.val.neg{color:var(--red)}.val.gold{color:var(--gold-soft)}
 
   .tabs{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap}
-  .tab{min-width:0;font-size:11.5pxtouch-action:manipulation;}
+  .tab{min-width:0;font-size:11.5px;touch-action:manipulation}
   .leg{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--panel-2);
     border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:7px}
   .legtxt{min-width:0}
@@ -163,7 +163,7 @@
   .match:hover{border-color:rgba(255,255,255,.18);box-shadow:0 2px 12px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.1)}
   :root[data-theme="light"] .match{background:rgba(255,255,255,.8);border-color:rgba(0,0,0,.08);box-shadow:0 1px 8px rgba(0,0,0,.05)}
   :root[data-theme="light"] .match:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
-  .mhead{padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10pxtouch-action:manipulation;cursor:pointer;}
+  .mhead{padding:12px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;touch-action:manipulation}
   .mteams{flex:1;min-width:0}
   .mteams .t{font-weight:600;font-size:14px;display:flex;justify-content:space-between;gap:8px}
   .mteams .t .sc{font-family:var(--mono);color:var(--gold-soft)}
@@ -1312,6 +1312,77 @@ button:focus-visible, .chip:focus-visible, .tab:focus-visible, input:focus-visib
   color: var(--txt-faint);
   font-size: 14px;
   text-align: center;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   MISSION 12 — DESIGN FINAL · Quiet Luxury
+   100% additif · aucune classe JS supprimée · fin de cascade
+   ═══════════════════════════════════════════════════════════ */
+
+/* 1 ─ TRANSITIONS DOUCES */
+.match,.card,.btn,.pb,.tab,.snav,.chip,.cbtn,.mtgl,.rbtn,.themetgl{
+  transition:transform .18s cubic-bezier(.4,0,.2,1),
+             box-shadow .22s ease,border-color .22s ease,
+             background-color .22s ease,color .18s ease;
+}
+.panel.on{animation:panelFade .3s ease both}
+@keyframes panelFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* 2 ─ TYPOGRAPHIE & LISIBILITÉ */
+h1{font-size:clamp(22px,5vw,30px);letter-spacing:-.01em}
+h2,.card h2{font-size:clamp(17px,4.2vw,21px);letter-spacing:-.005em;line-height:1.25}
+.analysis,.vctx,.bchance{line-height:1.6}
+:root[data-theme="light"]{--txt-dim:#3d4048;--txt-faint:#6b6f78}
+
+/* 3 ─ PROFONDEUR & COULEUR (sobriété) */
+.btn{
+  background-image:linear-gradient(180deg,var(--gold-soft),var(--gold));
+  box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 6px 18px rgba(201,168,76,.18);
+}
+.card{background-image:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+.match{background-image:linear-gradient(180deg,rgba(255,255,255,.015),transparent)}
+:root[data-theme="light"] .card,
+:root[data-theme="light"] .match{background-image:none}
+.tab.on,.snav.on,.mtgl.on{box-shadow:0 3px 14px rgba(201,168,76,.28)}
+
+/* 4 ─ MICRO-INTERACTIONS */
+.btn:hover,.pb:hover,.chip:hover,.cbtn:hover,.rbtn:hover{transform:translateY(-1px)}
+.btn:hover{box-shadow:0 1px 0 rgba(255,255,255,.3) inset,0 8px 22px rgba(201,168,76,.28)}
+.pb:hover,.chip:hover{border-color:var(--gold);color:var(--gold-soft)}
+.btn:active,.pb:active,.tab:active,.snav:active,.chip:active,
+.cbtn:active,.mtgl:active,.rbtn:active{transform:scale(.98)}
+.btn:focus-visible,.pb:focus-visible,.tab:focus-visible,.snav:focus-visible,
+.chip:focus-visible,.cbtn:focus-visible,.mtgl:focus-visible,.rbtn:focus-visible,
+.mhead:focus-visible,.themetgl:focus-visible,a:focus-visible,
+input:focus-visible,select:focus-visible{
+  outline:2px solid var(--gold);outline-offset:2px;border-radius:8px;
+}
+@media(hover:none){
+  .btn:hover,.pb:hover,.chip:hover,.cbtn:hover,.rbtn:hover{transform:none}
+}
+
+/* 5 ─ RESPONSIVE MOBILE · cibles tactiles ≥44px */
+@media(max-width:480px){
+  .btn,.pb,.tab,.snav,.chip,.cbtn,.mtgl{min-height:44px}
+  .tab,.cbtn,.mtgl{display:flex;align-items:center;justify-content:center}
+  .chip,.snav{display:inline-flex;align-items:center}
+  .tab{font-size:11px}
+  .pb .p{font-size:19px}
+  .wrap{padding:0 12px}
+  .card{padding:16px}
+  .bars{gap:7px}
+}
+
+/* 6 ─ ESPACEMENT & GRILLE */
+.match{margin-bottom:12px}
+.bars{gap:9px;margin:16px 0}
+.bars2{gap:9px}
+.card{padding:20px}
+
+/* 7 ─ RESPECT DU SYSTÈME (accessibilité mouvement) */
+@media(prefers-reduced-motion:reduce){
+  *,.panel.on{animation:none!important;transition:none!important}
 }
 
 </style>
