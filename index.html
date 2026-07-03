@@ -1132,6 +1132,7 @@ button:active { transform: scale(.97); }
 </div>
 <style>
 @keyframes bannerBlink{0%,100%{opacity:1}50%{opacity:.7}}
+/* CORRECTION 1 : setTimeout ajouté après loadFeed() en fin de script */
 
 /* ╔═══════════════════════════════════════════════╗
    ║  BLACK PARIS — UX/UI Premium v3               ║
@@ -1561,7 +1562,7 @@ input:focus-visible,select:focus-visible{
     <!-- ── ANALYSER (Simple + Combiné fusionnés) ── -->
     <div class="sub-panel on" id="analyser">
       <div class="card">
-        <h2>🎯 Analyser un prédiction</h2>
+        <h2>🎯 Analyser une prédiction</h2>
         <p class="hint">Choisis ton match et ton prédiction. L'outil calcule la probabilité instantanément.</p>
         <div class="mode-toggle">
           <button class="mtgl on" id="mtgl-simple" onclick="setMode('simple')">Prédiction simple</button>
@@ -2224,6 +2225,7 @@ async function loadFeed(manual){
         scoreAway:f.scoreAway!=null?f.scoreAway:null};
     }).filter(function(x){return x.ko&&x.t1&&x.t2;});
     computeStrengths();
+    MATCHES.forEach(_lockPrediction);
     document.getElementById('upd').textContent='Mis à jour : '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
     _countdown=REFRESH_SEC;
     renderMatches();fillBetSelectors();fillComboSelectors();renderCombo();fillFavSelect();renderStandings();renderRecord();renderBestPick();renderActu();renderChauds();fillMatchSelect();
@@ -2486,6 +2488,8 @@ function statusOf(m){
   var now=Date.now();
   if(m.ft)return 'done';
   if(now<m.ko)return (m.ko-now<24*3600e3)?'soon':'up';
+  var _ext={ET:1,BT:1,P:1,PEN:1,AET:1};
+  if(m.status&&_ext[m.status])return 'live';
   if(now<m.ko+135*60e3)return 'live';
   return 'done';
 }
@@ -2540,7 +2544,7 @@ function renderMatches(){
     if(FILTER==='done')return s==='done';
     return true;
   });
-  list.sort((a,b)=>a.ko-b.ko);
+  list.sort(FILTER==='done'?((a,b)=>b.ko-a.ko):((a,b)=>a.ko-b.ko));
   if(SEARCH){list=list.filter(function(m){return (m.t1+' '+m.t2+' '+fr(m.t1)+' '+fr(m.t2)).toLowerCase().indexOf(SEARCH)>=0;});}
   var host=document.getElementById('matchlist');
   if(list.length===0){host.innerHTML='<div class="empty">Aucun match dans ce filtre.</div>';return;}
@@ -2720,6 +2724,19 @@ function addBetStructured(){
   save();render();
   document.getElementById('bo2').value='';document.getElementById('bstake2').value='';
 }
+function _lockPrediction(m){
+  if(!m.fid||m.ft)return;
+  var s=statusOf(m);
+  if(s==='live')return; // ne jamais figer pendant le match
+  var key='bp_pred_'+m.fid;
+  try{if(localStorage.getItem(key))return;}catch(e){return;}
+  var r=priorPredict(m);
+  try{localStorage.setItem(key,JSON.stringify({pW:r.pW,pD:r.pD,pL:r.pL}));}catch(e){}
+}
+function _getLockedPrediction(m){
+  if(!m.fid)return null;
+  try{var v=localStorage.getItem('bp_pred_'+m.fid);return v?JSON.parse(v):null;}catch(e){return null;}
+}
 function priorPredict(m){
   var La=lev(m.t1),Lb=lev(m.t2);
   var lA=La*(1/Lb)*AVG, lB=Lb*(1/La)*AVG;
@@ -2732,7 +2749,7 @@ function renderRecord(){
   var total=0,correct=0,rows=[];
   MATCHES.forEach(function(m){
     if(!m.ft||!RATING[m.t1]||!RATING[m.t2])return;
-    var r=priorPredict(m);
+    var r=_getLockedPrediction(m)||priorPredict(m);
     var pW=r.pW,pD=r.pD,pL=r.pL;
     var predKey=(pW>pD&&pW>pL)?'H':(pL>pD&&pL>pW)?'A':'D';
     var predLbl=predKey==='H'?fr(m.t1):predKey==='A'?fr(m.t2):'Nul';
@@ -3085,18 +3102,13 @@ function resultHtml(m,i){
 }
 function aiResume(i){
   var m=MATCHES[i],box=document.getElementById('airesume_'+i);if(!m||!box)return;
-  box.style.display='block';box.textContent='Analyse en cours…';
-  var buts=function(g){return (g||[]).map(function(x){return x.name+' '+x.minute+"'";}).join(', ')||'aucun';};
-  askAI('Résume ce match en 3 phrases max : '+fr(m.t1)+' '+m.ft[0]+'-'+m.ft[1]+' '+fr(m.t2)+'. Buteurs '+fr(m.t1)+' : '+buts(m.g1)+'. Buteurs '+fr(m.t2)+' : '+buts(m.g2)+'.','')
-    .then(function(a){box.textContent=(a&&a.response)?a.response:'Résumé indisponible pour le moment.';});
+  box.style.display='block';
+  box.textContent=generateSummary(i);
 }
 function aiExplain(i){
   var m=MATCHES[i],box=document.getElementById('aiwhy_'+i);if(!m||!box)return;
-  box.style.display='block';box.textContent='Analyse en cours…';
-  var r=predictMatch(m);
-  var ctx=fr(m.t1)+' : '+Math.round(r.pW*100)+'%, Nul : '+Math.round(r.pD*100)+'%, '+fr(m.t2)+' : '+Math.round(r.pL*100)+'%. Niveaux : '+(RATING[m.t1]||'—')+' vs '+(RATING[m.t2]||'—')+'. Forme : '+(FORM[m.t1]||'—')+' vs '+(FORM[m.t2]||'—')+'.';
-  askAI('Explique en 2-3 phrases pourquoi le modèle statistique donne ces probabilités pour '+fr(m.t1)+' vs '+fr(m.t2)+'.',ctx)
-    .then(function(a){box.textContent=(a&&a.response)?a.response:'Explication indisponible pour le moment.';});
+  box.style.display='block';
+  box.textContent=generateExplanation(i);
 }
 function aiSuggest(){
   var box=document.getElementById('ana-ai');if(!box)return;
@@ -3104,11 +3116,61 @@ function aiSuggest(){
   if(!sel||sel.value===''||!ps||!ps.options[ps.selectedIndex]){box.style.display='none';return;}
   var m=MATCHES[sel.value],o=ps.options[ps.selectedIndex];
   var p=parseFloat(o.getAttribute('data-p'))||0;
-  box.style.display='block';box.textContent='Analyse en cours…';
-  askAI('En 2 phrases : cette tendance est-elle intéressante ? Match '+fr(m.t1)+' vs '+fr(m.t2)+', sélection "'+o.textContent+'", probabilité modèle '+Math.round(p*100)+'%.','')
-    .then(function(a){box.textContent=(a&&a.response)?a.response:'Suggestion indisponible pour le moment.';});
+  box.style.display='block';
+  box.textContent=generateSuggestion(parseInt(sel.value,10),p);
 }
 function abbr(t){t=fr(t);return t.length>13?t.slice(0,12)+'…':t;}
+
+// ── IA LOCALE : Explication des probabilités (remplace askAI) ──
+function generateExplanation(i){
+  var m=MATCHES[i];if(!m)return 'Match non trouvé.';
+  var r=predictMatch(m),t1=m.t1,t2=m.t2;
+  var rating1=RATING[t1]||'?',rating2=RATING[t2]||'?';
+  var f1=FORM[t1],f2=FORM[t2];
+  var form1=f1?f1[1]+'V '+f1[2]+'N '+f1[3]+'D':'données insuffisantes';
+  var form2=f2?f2[1]+'V '+f2[2]+'N '+f2[3]+'D':'données insuffisantes';
+  var top=[[r.pW,fr(t1)+' gagne'],[r.pD,'match nul'],[r.pL,fr(t2)+' gagne']].sort(function(a,b){return b[0]-a[0];});
+  var txt='🏆 '+fr(t1)+' ('+rating1+' pts) vs '+fr(t2)+' ('+rating2+' pts).\n';
+  txt+='📊 Forme récente : '+fr(t1)+' : '+form1+' · '+fr(t2)+' : '+form2+'.\n';
+  txt+='🔮 Le modèle favorise '+top[0][1]+' ('+Math.round(top[0][0]*100)+'%), avec '+Math.round(top[1][0]*100)+'% pour '+top[1][1]+'.\n';
+  txt+='⚡ Score probable : '+r.score+'.';
+  return txt;
+}
+
+// ── IA LOCALE : Résumé de match terminé (remplace askAI) ──
+function generateSummary(i){
+  var m=MATCHES[i];if(!m||!m.ft)return 'Match non terminé.';
+  var g1=m.g1||[],g2=m.g2||[];
+  var buts1=g1.map(function(g){return g.name+' ('+g.minute+"')";}).join(', ')||'aucun buteur';
+  var buts2=g2.map(function(g){return g.name+' ('+g.minute+"')";}).join(', ')||'aucun buteur';
+  var vainqueur=m.ft[0]>m.ft[1]?fr(m.t1):m.ft[0]<m.ft[1]?fr(m.t2):'nul';
+  var totButs=m.ft[0]+m.ft[1];
+  var intensite=totButs>3?'animé':totButs>1?'disputé':'fermé';
+  var ecart=Math.abs(m.ft[0]-m.ft[1]);
+  var logique=ecart>1?'logique':'équilibré';
+  var txt='Victoire '+m.ft[0]+'-'+m.ft[1]+' de '+(vainqueur!=='nul'?vainqueur:'match nul')+' dans un match '+intensite+'.\n';
+  if(g1.length)txt+=fr(m.t1)+' : '+buts1+'.\n';
+  if(g2.length)txt+=fr(m.t2)+' : '+buts2+'.\n';
+  if(vainqueur!=='nul')txt+='Le résultat est '+logique+' au vu des statistiques du match.';
+  else txt+="Le match nul reflète l'équilibre des deux équipes.";
+  return txt;
+}
+
+// ── IA LOCALE : Suggestion d'analyse (remplace askAI) ──
+function generateSuggestion(i,p){
+  var m=MATCHES[i];if(!m)return 'Match non trouvé.';
+  var r=predictMatch(m);
+  var pct=Math.round(p*100);
+  var fair=p>0?(1/p).toFixed(2):'∞';
+  var isGood=pct>=50;
+  var maxP=Math.max(r.pW,r.pD,r.pL);
+  var fav=r.pW===maxP?fr(m.t1):r.pL===maxP?fr(m.t2):'personne';
+  var txt='📊 Cette tendance est '+(isGood?'intéressante':'risquée')+'.\n';
+  txt+='La probabilité réelle estimée est de '+pct+'%, ce qui donne une cote juste de '+fair+'.\n';
+  if(maxP>=0.55)txt+='Le modèle favorise '+fav+' avec '+Math.round(maxP*100)+'% de confiance.';
+  else txt+='Le match est très équilibré, aucune équipe ne se dégage nettement.';
+  return txt;
+}
 
 function sendToValue(i,key,p){
   var m=MATCHES[i];
@@ -3700,6 +3762,11 @@ document.addEventListener('keydown',function(e){
 render();
 renderGreet();
 loadFeed();
+setTimeout(function(){
+  var banner=document.getElementById('banner-gratuit');
+  if(banner){banner.style.transition='opacity .8s';banner.style.opacity='0';
+    setTimeout(function(){if(banner)banner.style.display='none';},800);}
+},60000);
 window.addEventListener('scroll',function(){var b=document.getElementById('toTop');if(b)b.classList.toggle('show',window.scrollY>600);},{passive:true});
 // drapeaux via flagcdn.com (pas twemoji)
 // refresh géré par tickCountdown (adaptatif live)
@@ -3710,7 +3777,7 @@ window.addEventListener('scroll',function(){var b=document.getElementById('toTop
     history.replaceState(null,'',location.pathname+location.search);
     if(IS_ADMIN){setTimeout(function(){openAdminDash();},300);return;}
     var code=prompt('🔐 Code admin :');
-    if(code===ADMIN_PASS){
+    if(code&&code.trim().toLowerCase()===ADMIN_PASS.toLowerCase()){
       try{sessionStorage.setItem('bp_adm','1');}catch(e){}
       IS_ADMIN=true;
       setTimeout(function(){
@@ -3726,31 +3793,7 @@ window.addEventListener('scroll',function(){var b=document.getElementById('toTop
 
 /* === CHAT & ADMIN === */
 var _cH=[];
-/* ══ BLACK PARIS 2.0 — IA via agent Replit (/ai) ══ */
-function _aiHash(s){var x=5381;for(var i=0;i<s.length;i++){x=((x<<5)+x+s.charCodeAt(i))|0;}return 'ai_'+(x>>>0).toString(36);}
-async function askAI(prompt,context){
-  var key=_aiHash(prompt+'|'+(context||''));
-  try{var c=localStorage.getItem(key);
-    if(c){var d=JSON.parse(c);if(Date.now()-d.t<15*60*1000)return d.r;}}catch(e){}
-  try{
-    var res=await fetch(AGENT+'/ai',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({prompt:prompt,context:context||'',
-        system:'Tu es BLACK PARIS, expert football et statistiques. Réponds en français, de manière concise. Vocabulaire autorisé : tendance, scénario probable, probabilité, modèle statistique. Jamais : pari, cote, mise, pronostic, bookmaker.'})});
-    if(!res.ok)throw new Error(res.status);
-    var data=await res.json();
-    var out={response:(data&&(data.response||data.text||data.answer))||''};
-    if(out.response){try{localStorage.setItem(key,JSON.stringify({r:out,t:Date.now()}));}catch(e){}}
-    return out;
-  }catch(e){return {error:'Service indisponible',response:''};}
-}
-function _chatContext(){
-  var now=Date.now(),L=[],D=[],U=[];
-  (MATCHES||[]).forEach(function(m){var s=statusOf(m);
-    if(s==='live')L.push(fr(m.t1)+' '+(m.scoreHome||0)+'-'+(m.scoreAway||0)+' '+fr(m.t2)+(m.elapsed?' ('+m.elapsed+"')":''));
-    else if(s==='done'&&m.ft)D.push(fr(m.t1)+' '+m.ft[0]+'-'+m.ft[1]+' '+fr(m.t2));
-    else if(m.ko>now&&m.ko<now+36*3600000)U.push(fr(m.t1)+' vs '+fr(m.t2)+' à '+m.time);});
-  return 'LIVE: '+(L.join('; ')||'aucun')+'. TERMINÉS: '+(D.slice(-8).join('; ')||'aucun')+'. À VENIR (36h): '+(U.slice(0,10).join('; ')||'aucun')+'.';
-}
+/* ══ IA locale (Poisson/Monte Carlo) — aucun appel externe ══ */
 function toggleChat(){
   var p=document.getElementById('chat-pop');
   var o=document.getElementById('chat-ol');
@@ -3793,11 +3836,8 @@ function sendChat(){
   }else if(ql.includes('modèle')||ql.includes('comment')){
     rep='Modèle Poisson + Monte Carlo : calcul des probabilités par analyse des forces attaque/défense, forme récente et données contextuelles.';
   }
-  if(rep){setTimeout(function(){_addBot(rep);},300);return;}
-  var th=_addBot('…');
-  askAI(q,_chatContext()).then(function(a){
-    if(th)th.textContent=(a&&a.response)?a.response:'Service IA indisponible. Essayez : matchs en direct, bilan, matchs du jour ou le nom d\'une équipe.';
-  });
+  if(!rep)rep="Essayez : matchs en direct, bilan, matchs du jour, ou le nom d'une équipe.";
+  setTimeout(function(){_addBot(rep);},300);
 }
 
 /* == ADMIN PANEL == */
@@ -3981,6 +4021,16 @@ BP.stats = {
 .adm-done{background:rgba(76,175,80,.18);color:#7fd88a}
 .adm-up,.adm-soon{background:rgba(201,168,76,.15);color:#e8c97a}
 @media(max-width:480px){.adm-tbl{font-size:10.5px}.adm-tbl th,.adm-tbl td{padding:6px 4px}}
+
+/* CORRECTION 3 : suppression du voile blanc (glassmorphism) sur Analyser/Suivi/Montante/Historique */
+#analyser .card,#suivi .card,#montante .card,#historique .card{
+  background:var(--panel-2)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  border:1px solid var(--line)!important;
+}
+:root[data-theme="light"] #analyser .card,:root[data-theme="light"] #suivi .card,
+:root[data-theme="light"] #montante .card,:root[data-theme="light"] #historique .card{
+  background:rgba(255,255,255,.96)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
 </style>
 </body>
 </html>
