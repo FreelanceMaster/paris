@@ -1697,32 +1697,32 @@ input:focus-visible,select:focus-visible{
 <div id="intro-ov" class="intro-ov" onclick="skipIntro()">
   <div class="intro-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" width="100%" height="auto" style="max-width:260px" aria-label="BLACK PARIS">
 <defs>
-  <linearGradient id="gG" x1="0" y1="0" x2="1" y2="1">
+  <linearGradient id="gG2" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0%" stop-color="#E8C97A"/>
     <stop offset="100%" stop-color="#A8872E"/>
   </linearGradient>
-  <clipPath id="ballClip"><circle cx="26" cy="30" r="20"/></clipPath>
+  <clipPath id="ballClip2"><circle cx="26" cy="30" r="20"/></clipPath>
 </defs>
 <!-- Ballon de foot -->
-<circle cx="26" cy="30" r="20" fill="none" stroke="url(#gG)" stroke-width="2.2"/>
+<circle cx="26" cy="30" r="20" fill="none" stroke="url(#gG2)" stroke-width="2.2"/>
 <!-- Pentagone central -->
-<polygon points="26,15 35,21 32,32 20,32 17,21" fill="url(#gG)" opacity=".9"/>
+<polygon points="26,15 35,21 32,32 20,32 17,21" fill="url(#gG2)" opacity=".9"/>
 <!-- Hexagones autour -->
-<polygon points="26,15 35,21 38,13 29,7 20,13" fill="none" stroke="url(#gG)" stroke-width="1.4" opacity=".7"/>
-<polygon points="35,21 38,13 47,18 46,29 35,32" fill="none" stroke="url(#gG)" stroke-width="1.4" opacity=".7"/>
-<polygon points="32,32 46,29 45,40 35,46 24,43" fill="none" stroke="url(#gG)" stroke-width="1.4" opacity=".7"/>
-<polygon points="20,32 24,43 13,46 7,38 6,29" fill="none" stroke="url(#gG)" stroke-width="1.4" opacity=".7"/>
-<polygon points="17,21 6,29 4,18 13,13 20,15" fill="none" stroke="url(#gG)" stroke-width="1.4" opacity=".7"/>
+<polygon points="26,15 35,21 38,13 29,7 20,13" fill="none" stroke="url(#gG2)" stroke-width="1.4" opacity=".7"/>
+<polygon points="35,21 38,13 47,18 46,29 35,32" fill="none" stroke="url(#gG2)" stroke-width="1.4" opacity=".7"/>
+<polygon points="32,32 46,29 45,40 35,46 24,43" fill="none" stroke="url(#gG2)" stroke-width="1.4" opacity=".7"/>
+<polygon points="20,32 24,43 13,46 7,38 6,29" fill="none" stroke="url(#gG2)" stroke-width="1.4" opacity=".7"/>
+<polygon points="17,21 6,29 4,18 13,13 20,15" fill="none" stroke="url(#gG2)" stroke-width="1.4" opacity=".7"/>
 <!-- Clip pour ne pas dépasser le cercle -->
-<circle cx="26" cy="30" r="20" fill="none" stroke="url(#gG)" stroke-width="2.5"/>
+<circle cx="26" cy="30" r="20" fill="none" stroke="url(#gG2)" stroke-width="2.5"/>
 <!-- Texte BLACK -->
-<text x="58" y="26" font-family="'Playfair Display','Impact','Arial Black',sans-serif" font-size="21" font-weight="800" fill="url(#gG)" letter-spacing="2">BLACK</text>
+<text x="58" y="26" font-family="'Playfair Display','Impact','Arial Black',sans-serif" font-size="21" font-weight="800" fill="url(#gG2)" letter-spacing="2">BLACK</text>
 <!-- Texte PARIS -->
 <text x="58" y="50" font-family="'Playfair Display','Impact','Arial Black',sans-serif" font-size="21" font-weight="400" fill="white" letter-spacing="5.5">PARIS</text>
 <!-- Ligne gold fine entre les deux -->
-<rect x="58" y="30" width="165" height="1.2" fill="url(#gG)" opacity=".4"/>
+<rect x="58" y="30" width="165" height="1.2" fill="url(#gG2)" opacity=".4"/>
 <!-- Tag prédictions -->
-<text x="154" y="26" font-family="'Space Grotesk','Arial',sans-serif" font-size="7" fill="url(#gG)" letter-spacing="1" opacity=".7">PRÉDICTIONS</text>
+<text x="154" y="26" font-family="'Space Grotesk','Arial',sans-serif" font-size="7" fill="url(#gG2)" letter-spacing="1" opacity=".7">PRÉDICTIONS</text>
 </svg></div>
   <div class="intro-dot"></div>
   <div class="intro-sub">Prédictions · CDM 2026</div><div class="intro-sub" style="font-size:10px;opacity:.45;margin-top:4px;letter-spacing:.8px">🏆 Bientôt toutes les ligues</div>
@@ -2090,11 +2090,16 @@ function showSubPanel(parentId,subId){
   if(subId==='suivi'){renderScore();render();}
 }
 document.querySelectorAll('.tab').forEach(function(t){
-  t.onclick=function(){showZone(t.dataset.t);};
+  t.onclick=function(){
+    showZone(t.dataset.t);
+    if(t.id==='tab-matchs')showSubPanel('matchs-zone','matchs'); // toujours revenir à la liste, jamais rester bloqué sur le classement
+  };
 });
 var _tabClassement=document.getElementById('tab-classement');
 if(_tabClassement)_tabClassement.onclick=function(){
   showZone('matchs-zone');showSubPanel('matchs-zone','classement');
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+  _tabClassement.classList.add('on');
 };
 /* ── Raccourcis clavier (ignorés si on tape dans un champ) ── */
 document.addEventListener('keydown',function(e){
@@ -5038,12 +5043,14 @@ function bpFavTeamsList(){
   nav.setAttribute('aria-label','Navigation principale');
   nav.innerHTML=
     '<button data-t="matchs-zone" class="bpbn on" aria-label="Matchs"><span>⚽</span><i>Matchs</i></button>'+
+    '<button data-t="matchs-zone" data-sub="classement" class="bpbn" aria-label="Classement"><span>🏆</span><i>Classement</i></button>'+
     '<button data-t="actu-zone" class="bpbn" aria-label="Actualité"><span>🔥</span><i>Actu</i></button>'+
     '<button data-t="espace-zone" class="bpbn" aria-label="Mon Espace"><span>🎯</span><i>Espace</i></button>';
   document.body.appendChild(nav);
   nav.querySelectorAll('.bpbn').forEach(function(b){
     b.onclick=function(){
       showZone(b.dataset.t);
+      showSubPanel('matchs-zone', b.dataset.sub||'matchs'); // toujours forcer le bon sous-panneau, jamais rester bloqué
       nav.querySelectorAll('.bpbn').forEach(function(x){x.classList.remove('on');});
       b.classList.add('on');
     };
